@@ -8,8 +8,8 @@ ORIGDIR=`pwd`
 cd "$srcdir"
 
 DIE=0
-package=gst-cenc
-srcfile=src/gstcencelements.c
+package=gst-widevine
+srcfile=src/gstwidevineelements.c
 
 # Make sure we have common
 if test ! -f common/gst-autogen.sh;

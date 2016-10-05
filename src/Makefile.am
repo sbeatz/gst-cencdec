@@ -1,4 +1,4 @@
-plugin_LTLIBRARIES = libgstcenccrypto.la
+plugin_LTLIBRARIES = libgstwidevinecrypto.la
 
 # Directory where the gstreamer plugins have been compiled
 GST_PLUGINS_GOOD_BASEDIR = $(firstword $(subst :, ,$(GST_PLUGINS_BASE_DIR)))/..
@@ -18,11 +18,11 @@ GST_PLUGINS_BASE_GST_INCLUDE = -I$(PLUGINDIR)/..
 endif
 
 # sources used to compile this plugin
-libgstcenccrypto_la_SOURCES = \
-  gstcencdec.c \
-  gstcencelements.c 
+libgstwidevinecrypto_la_SOURCES = \
+  gstwidevinedec.c \
+  gstwidevineelements.c
 
-libgstcenccrypto_la_CFLAGS = \
+libgstwidevinecrypto_la_CFLAGS = \
  -I$(top_srcdir)/common \
  -I$(top_srcdir)/gst-libs \
   $(OPENSSL_CFLAGS) \
@@ -33,12 +33,12 @@ libgstcenccrypto_la_CFLAGS = \
   $(GST_PLUGINS_BASE_GST_INCLUDE) \
   $(CPU_TUNE_CFLAGS)
 
-libgstcenccrypto_la_LDFLAGS = \
+libgstwidevinecrypto_la_LDFLAGS = \
   $(GST_PLUGIN_LDFLAGS) \
   -Wl,-rpath=$(GST_PLUGINS_DIR)/.. \
   -no-undefined
 
-libgstcenccrypto_la_LIBADD = \
+libgstwidevinecrypto_la_LIBADD = \
   $(top_builddir)/gst-libs/gst/libgstaesctr-@GST_API_VERSION@.la \
   $(GST_PLUGINS_BASE_LIBS) \
   $(GST_BASE_LIBS) \
@@ -50,4 +50,4 @@ libgstcenccrypto_la_LIBTOOLFLAGS = $(GST_PLUGIN_LIBTOOLFLAGS)
 
 # headers we need but don't want installed
 noinst_HEADERS = \
-  gstcencdec.h
+  gstwidevinedec.h
