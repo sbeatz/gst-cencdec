@@ -31,7 +31,8 @@
 
 #include <string.h>
 #include <stdio.h>
-
+#include <stdint.h>
+#include <stdbool.h>
 #include <gst/gst.h>
 #include <gst/gstelement.h>
 #include <gst/base/gstbasetransform.h>
@@ -129,6 +130,7 @@ static void gst_widevine_keypair_destroy (gpointer data);
 static void
 gst_widevine_decrypt_class_init (GstwidevineDecryptClass * klass)
 {
+  wvadapter *wvadapter_ = wvadapter();
   GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
   GstBaseTransformClass *base_transform_class =
       GST_BASE_TRANSFORM_CLASS (klass);
