@@ -1,3 +1,6 @@
+#include <stdint.h>
+#include <stdbool.h>
+
 typedef void wvadapter;
 
 #ifdef __cplusplus
