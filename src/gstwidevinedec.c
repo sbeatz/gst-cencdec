@@ -18,7 +18,7 @@
  */
 
 /**
- * SECTION:element-gstWIDEVINEdecrypt
+ * SECTION:element-gstwidevinedecrypt
  *
  * Decrypts media that has been encrypted using the ISOBMFF Common Encryption
  * standard.
@@ -53,20 +53,20 @@ GST_DEBUG_CATEGORY_STATIC (gst_widevine_decrypt_debug_category);
 #define KID_LENGTH 16
 #define KEY_LENGTH 16
 
-typedef struct _GstWidevineKeyPair 
+typedef struct _GstwidevineKeyPair 
 {
   GBytes *key_id;
   gchar *content_id;
   GBytes *key;
-} GstWidevineKeyPair;
+} GstwidevineKeyPair;
 
-struct _GstWidevineDecrypt
+struct _GstwidevineDecrypt
 {
   GstBaseTransform parent;
-  GPtrArray *keys; /* array of GstWidevineKeyPair objects */
+  GPtrArray *keys; /* array of GstwidevineKeyPair objects */
 };
 
-struct _GstWidevineDecryptClass
+struct _GstwidevineDecryptClass
 {
   GstBaseTransformClass parent_class;
 };
@@ -83,9 +83,9 @@ static GstCaps *gst_widevine_decrypt_transform_caps (GstBaseTransform * base,
 
 static GstFlowReturn gst_widevine_decrypt_transform_ip (GstBaseTransform * trans,
     GstBuffer * buf);
-static const GstWidevineKeyPair* gst_widevine_decrypt_lookup_key (GstWidevineDecrypt * self,
+static const GstwidevineKeyPair* gst_widevine_decrypt_lookup_key (GstwidevineDecrypt * self,
     GstBuffer * kid);
-static GstWidevineKeyPair* gst_widevine_decrypt_get_key (GstWidevineDecrypt * self, GstBuffer * kid);
+static GstwidevineKeyPair* gst_widevine_decrypt_get_key (GstwidevineDecrypt * self, GstBuffer * kid);
 static gboolean gst_widevine_decrypt_sink_event_handler (GstBaseTransform * trans,
     GstEvent * event);
 static gchar* gst_widevine_create_uuid_string (gconstpointer uuid_bytes);
@@ -122,12 +122,12 @@ static GstStaticPadTemplate gst_widevine_decrypt_src_template =
 /* class initialization */
 
 #define gst_widevine_decrypt_parent_class parent_class
-G_DEFINE_TYPE (GstWidevineDecrypt, gst_widevine_decrypt, GST_TYPE_BASE_TRANSFORM);
+G_DEFINE_TYPE (GstwidevineDecrypt, gst_widevine_decrypt, GST_TYPE_BASE_TRANSFORM);
 
 static void gst_widevine_keypair_destroy (gpointer data);
 
 static void
-gst_widevine_decrypt_class_init (GstWidevineDecryptClass * klass)
+gst_widevine_decrypt_class_init (GstwidevineDecryptClass * klass)
 {
   GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
   GstBaseTransformClass *base_transform_class =
@@ -140,13 +140,13 @@ gst_widevine_decrypt_class_init (GstWidevineDecryptClass * klass)
       gst_static_pad_template_get (&gst_widevine_decrypt_src_template));
 
   gst_element_class_set_static_metadata (element_class,
-      "Decrypt content encrypted using Widevine",
+      "Decrypt content encrypted using widevine",
       GST_ELEMENT_FACTORY_KLASS_DECRYPTOR,
-      "Decrypts media that has been encrypted using Widevine.",
+      "Decrypts media that has been encrypted using widevine.",
       "N/A");
 
   GST_DEBUG_CATEGORY_INIT (gst_widevine_decrypt_debug_category,
-      "widevinedec", 0, "Widevine decryptor");
+      "widevinedec", 0, "widevine decryptor");
 
   gobject_class->dispose = gst_widevine_decrypt_dispose;
   gobject_class->finalize = gst_widevine_decrypt_finalize;
@@ -162,7 +162,7 @@ gst_widevine_decrypt_class_init (GstWidevineDecryptClass * klass)
 }
 
 static void
-gst_widevine_decrypt_init (GstWIDEVINEDecrypt * self)
+gst_widevine_decrypt_init (GstwidevineDecrypt * self)
 {
   GstBaseTransform *base = GST_BASE_TRANSFORM (self);
 
@@ -175,7 +175,7 @@ gst_widevine_decrypt_init (GstWIDEVINEDecrypt * self)
 void
 gst_widevine_decrypt_dispose (GObject * object)
 {
-  GstWidevineDecrypt *self = GST_WIDEVINE_DECRYPT (object);
+  GstwidevineDecrypt *self = GST_widevine_DECRYPT (object);
 
   if (self->keys) {
     g_ptr_array_unref (self->keys);
@@ -188,7 +188,7 @@ gst_widevine_decrypt_dispose (GObject * object)
 void
 gst_widevine_decrypt_finalize (GObject * object)
 {
-  /* GstWIDEVINEDecrypt *self = GST_WIDEVINE_DECRYPT (object); */
+  /* GstwidevineDecrypt *self = GST_widevine_DECRYPT (object); */
 
   /* clean up object here */
 
@@ -198,7 +198,7 @@ gst_widevine_decrypt_finalize (GObject * object)
 static gboolean
 gst_widevine_decrypt_start (GstBaseTransform * trans)
 {
-  GstWIDEVINEDecrypt *self = GST_WIDEVINE_DECRYPT (trans);
+  GstwidevineDecrypt *self = GST_widevine_DECRYPT (trans);
   GST_DEBUG_OBJECT (self, "start");
   return TRUE;
 }
@@ -206,7 +206,7 @@ gst_widevine_decrypt_start (GstBaseTransform * trans)
 static gboolean
 gst_widevine_decrypt_stop (GstBaseTransform * trans)
 {
-  GstWIDEVINEDecrypt *self = GST_WIDEVINE_DECRYPT (trans);
+  GstwidevineDecrypt *self = GST_widevine_DECRYPT (trans);
   GST_DEBUG_OBJECT (self, "stop");
   return TRUE;
 }
@@ -324,7 +324,7 @@ gst_widevine_decrypt_transform_caps (GstBaseTransform * base,
           "original-media-type", G_TYPE_STRING, gst_structure_get_name (in),
           NULL);
 
-      gst_structure_set_name (out, "application/x-WIDEVINE");
+      gst_structure_set_name (out, "application/x-widevine");
       gst_widevine_decrypt_append_if_not_duplicate(res, out);
 
       out = gst_structure_copy (tmp);
@@ -333,7 +333,7 @@ gst_widevine_decrypt_transform_caps (GstBaseTransform * base,
           "original-media-type", G_TYPE_STRING, gst_structure_get_name (in),
           NULL);
 
-      gst_structure_set_name (out, "application/x-WIDEVINE");
+      gst_structure_set_name (out, "application/x-widevine");
 
       gst_structure_free (tmp);
     }
@@ -385,7 +385,7 @@ gst_widevine_create_content_id (gconstpointer key_id)
 }
 
 static GstBuffer*
-gst_widevine_decrypt_key_id_from_content_id(GstWidevineDecrypt * self, const gchar *content_id)
+gst_widevine_decrypt_key_id_from_content_id(GstwidevineDecrypt * self, const gchar *content_id)
 {
   GstBuffer *kid;
   GstMapInfo map;
@@ -407,7 +407,7 @@ gst_widevine_decrypt_key_id_from_content_id(GstWidevineDecrypt * self, const gch
     map.data[i] = b;
     pos += 2;
   }
-  /*id_string = gst_WIDEVINE_create_uuid_string (map.data);
+  /*id_string = gst_widevine_create_uuid_string (map.data);
   GST_DEBUG_OBJECT (self, "content_id=%s  key=%s", content_id, id_string);
   g_free (id_string);*/
   gst_buffer_unmap (kid, &map);
@@ -418,8 +418,8 @@ gst_widevine_decrypt_key_id_from_content_id(GstWidevineDecrypt * self, const gch
   return kid;
 }
 
-static GstWidevineKeyPair *
-gst_widevine_decrypt_get_key (GstWidevineDecrypt * self, GstBuffer * key_id)
+static GstwidevineKeyPair *
+gst_widevine_decrypt_get_key (GstwidevineDecrypt * self, GstBuffer * key_id)
 {
   guint8 key[KEY_LENGTH] = { 0 };
   guint8 hash[SHA_DIGEST_LENGTH] = { 0 };
@@ -428,11 +428,11 @@ gst_widevine_decrypt_get_key (GstWidevineDecrypt * self, GstBuffer * key_id)
   size_t bytes_read = 0;
   FILE *key_file = NULL;
   GstMapInfo info;
-  GstWidevineKeyPair *kp;
+  GstwidevineKeyPair *kp;
 
   if(!gst_buffer_map(key_id, &info, GST_MAP_READ))
     return NULL;
-  kp = g_new0 (GstWidevineKeyPair, 1);
+  kp = g_new0 (GstwidevineKeyPair, 1);
   kp->key_id = g_bytes_new (info.data, KEY_LENGTH);
   kp->content_id = gst_widevine_create_content_id (info.data);
   gst_buffer_unmap(key_id, &info);
@@ -493,11 +493,11 @@ gst_widevine_create_uuid_string (gconstpointer uuid_bytes)
   return uuid_string;
 }
 
-static const GstWidevineKeyPair*
-gst_Widevine_decrypt_lookup_key (GstWidevineDecrypt * self, GstBuffer * kid)
+static const GstwidevineKeyPair*
+gst_widevine_decrypt_lookup_key (GstwidevineDecrypt * self, GstBuffer * kid)
 {
   GstMapInfo info;
-  const GstWidevineKeyPair *kp=NULL;
+  const GstwidevineKeyPair *kp=NULL;
   int i;
   gsize sz;
 
@@ -511,7 +511,7 @@ gst_Widevine_decrypt_lookup_key (GstWidevineDecrypt * self, GstBuffer * kid)
     gst_buffer_unmap (kid, &info);
   */
   for (i = 0; kp==NULL && i < self->keys->len; ++i) {
-    const GstWIDEVINEKeyPair *k;
+    const GstwidevineKeyPair *k;
     k = g_ptr_array_index (self->keys, i);
     if(gst_buffer_memcmp (kid, 0, g_bytes_get_data (k->key_id, NULL), KEY_LENGTH)==0){
       kp=k;
@@ -527,10 +527,10 @@ gst_Widevine_decrypt_lookup_key (GstWidevineDecrypt * self, GstBuffer * kid)
 static GstFlowReturn
 gst_widevine_decrypt_transform_ip (GstBaseTransform * base, GstBuffer * buf)
 {
-  GstWIDEVINEDecrypt *self = GST_WIDEVINE_DECRYPT (base);
+  GstwidevineDecrypt *self = GST_widevine_DECRYPT (base);
   GstFlowReturn ret = GST_FLOW_OK;
   GstMapInfo map, iv_map;
-  const GstWIDEVINEKeyPair *keypair;
+  const GstwidevineKeyPair *keypair;
   const GstProtectionMeta *prot_meta = NULL;
   int pos = 0;
   int sample_index = 0;
@@ -623,7 +623,7 @@ gst_widevine_decrypt_transform_ip (GstBaseTransform * base, GstBuffer * buf)
     }
   }
 
-  keypair = gst_WIDEVINE_decrypt_lookup_key (self,key_id);
+  keypair = gst_widevine_decrypt_lookup_key (self,key_id);
 
   if (!keypair) {
     gsize sz;
@@ -699,7 +699,7 @@ out:
 }
 
 static void
-gst_WIDEVINE_decrypt_parse_pssh_box (GstWIDEVINEDecrypt * self, GstBuffer * pssh)
+gst_widevine_decrypt_parse_pssh_box (GstwidevineDecrypt * self, GstBuffer * pssh)
 {
   GstMapInfo info;
   GstByteReader br;
@@ -725,7 +725,7 @@ gst_WIDEVINE_decrypt_parse_pssh_box (GstWIDEVINEDecrypt * self, GstBuffer * pssh
     key_id_data = gst_byte_reader_get_data_unchecked (&br, key_id_count * 16);
 
     while (key_id_count > 0) {
-      gchar *key_id_string = gst_WIDEVINE_create_uuid_string (key_id_data);
+      gchar *key_id_string = gst_widevine_create_uuid_string (key_id_data);
       GST_DEBUG_OBJECT (self, "key_id: %s", key_id_string);
       g_free (key_id_string);
       key_id_data += key_id_size;
@@ -742,7 +742,7 @@ gst_WIDEVINE_decrypt_parse_pssh_box (GstWIDEVINEDecrypt * self, GstBuffer * pssh
         g_memdup (gst_byte_reader_get_data_unchecked (&br, data_size),
         data_size);
     GstBuffer *buf = gst_buffer_new_wrapped (data, data_size);
-    GST_DEBUG_OBJECT (self, "WIDEVINE protection system data size: %"
+    GST_DEBUG_OBJECT (self, "widevine protection system data size: %"
         G_GSIZE_FORMAT, gst_buffer_get_size (buf));
     gst_buffer_unref (buf);
   }
@@ -750,7 +750,7 @@ gst_WIDEVINE_decrypt_parse_pssh_box (GstWIDEVINEDecrypt * self, GstBuffer * pssh
 }
 
 static gboolean
-gst_WIDEVINE_decrypt_parse_content_protection_element (GstWIDEVINEDecrypt * self,
+gst_widevine_decrypt_parse_content_protection_element (GstwidevineDecrypt * self,
     GstBuffer * pssi)
 {
   GstMapInfo info;
@@ -801,9 +801,9 @@ gst_WIDEVINE_decrypt_parse_content_protection_element (GstWIDEVINEDecrypt * self
       if (!node_content)
         continue;
       GST_DEBUG_OBJECT (self, "ContentId: %s", node_content);
-      kid = gst_WIDEVINE_decrypt_key_id_from_content_id(self, node_content);
+      kid = gst_widevine_decrypt_key_id_from_content_id(self, node_content);
       /* pre-fetch the key */
-      if(kid && !gst_WIDEVINE_decrypt_get_key (self, kid)){
+      if(kid && !gst_widevine_decrypt_get_key (self, kid)){
         GST_ERROR_OBJECT (self, "Failed to get key for content ID %s", node_content);
       }
       if(kid)
@@ -820,13 +820,13 @@ beach:
 }
 
 static gboolean
-gst_WIDEVINE_decrypt_sink_event_handler (GstBaseTransform * trans, GstEvent * event)
+gst_widevine_decrypt_sink_event_handler (GstBaseTransform * trans, GstEvent * event)
 {
   gboolean ret = TRUE;
   const gchar *system_id;
   GstBuffer *pssi = NULL;
   const gchar *loc;
-  GstWIDEVINEDecrypt *self = GST_WIDEVINE_DECRYPT (trans);
+  GstwidevineDecrypt *self = GST_widevine_DECRYPT (trans);
 
   switch (GST_EVENT_TYPE (event)) {
     case GST_EVENT_PROTECTION:
@@ -835,11 +835,11 @@ gst_WIDEVINE_decrypt_sink_event_handler (GstBaseTransform * trans, GstEvent * ev
         GST_DEBUG_OBJECT (self, "system_id: %s  loc: %s", system_id, loc);
         if(g_ascii_strcasecmp(loc, "dash/mpd")==0 && g_ascii_strcasecmp(system_id, "5e629af5-38da-4063-8977-97ffbd9902d4")==0){
             GST_DEBUG_OBJECT (self, "event carries MPD pssi data");
-            gst_WIDEVINE_decrypt_parse_content_protection_element (self, pssi);
+            gst_widevine_decrypt_parse_content_protection_element (self, pssi);
         }
         else if(g_str_has_prefix (loc, "isobmff/") && g_ascii_strcasecmp(system_id, "69f908af-4816-46ea-910c-cd5dcccb0a3a")==0){
           GST_DEBUG_OBJECT (self, "event carries pssh data from qtdemux");
-          gst_WIDEVINE_decrypt_parse_pssh_box (self, pssi);
+          gst_widevine_decrypt_parse_pssh_box (self, pssi);
         }
         gst_event_unref (event);
       break;
@@ -854,7 +854,7 @@ gst_WIDEVINE_decrypt_sink_event_handler (GstBaseTransform * trans, GstEvent * ev
 
 static void gst_widevine_keypair_destroy (gpointer data)
 {
-  GstWIDEVINEKeyPair *key_pair = (GstWidevineKeyPair*)data;
+  GstwidevineKeyPair *key_pair = (GstwidevineKeyPair*)data;
   g_bytes_unref (key_pair->key_id);
   g_free (key_pair->content_id);
   g_bytes_unref (key_pair->key);
