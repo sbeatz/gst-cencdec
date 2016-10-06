@@ -38,7 +38,7 @@
 #include <gst/base/gstbytereader.h>
 #include <gst/gstprotection.h>
 #include <gst/gstaesctr.h>
-#include "cdm/media/cdm/cdm_adapter.h"
+#include "cdm/media/cdm/cdm_adapter_interface.h"
 #include <glib.h>
 
 #include <openssl/sha.h>
