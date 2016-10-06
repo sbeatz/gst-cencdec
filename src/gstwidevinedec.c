@@ -121,7 +121,7 @@ static GstStaticPadTemplate gst_widevine_decrypt_src_template =
 
 /* class initialization */
 
-#define gst_WIDEVINE_decrypt_parent_class parent_class
+#define gst_widevine_decrypt_parent_class parent_class
 G_DEFINE_TYPE (GstWidevineDecrypt, gst_widevine_decrypt, GST_TYPE_BASE_TRANSFORM);
 
 static void gst_widevine_keypair_destroy (gpointer data);
@@ -852,9 +852,9 @@ gst_WIDEVINE_decrypt_sink_event_handler (GstBaseTransform * trans, GstEvent * ev
   return ret;
 }
 
-static void gst_WIDEVINE_keypair_destroy (gpointer data)
+static void gst_widevine_keypair_destroy (gpointer data)
 {
-  GstWIDEVINEKeyPair *key_pair = (GstWIDEVINEKeyPair*)data;
+  GstWIDEVINEKeyPair *key_pair = (GstWidevineKeyPair*)data;
   g_bytes_unref (key_pair->key_id);
   g_free (key_pair->content_id);
   g_bytes_unref (key_pair->key);
