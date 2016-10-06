@@ -1,5 +1,4 @@
-/* GStreamer ISO MPEG DASH common encryption decryptor
- * Copyright (C) 2013 YouView TV Ltd. <alex.ashley@youview.com>
+/* GStreamer widevine decryptor
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
