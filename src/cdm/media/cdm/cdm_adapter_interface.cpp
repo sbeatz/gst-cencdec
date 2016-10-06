@@ -1,6 +1,7 @@
 #include "cdm_adapter_interface.h"
 #include "cdm_adapter.h"
 #include <stdint.h>
+#include <stdbool.h>
 extern "C" 
 {
 
