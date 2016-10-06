@@ -89,7 +89,7 @@ static GstwidevineKeyPair* gst_widevine_decrypt_get_key (GstwidevineDecrypt * se
 static gboolean gst_widevine_decrypt_sink_event_handler (GstBaseTransform * trans,
     GstEvent * event);
 static gchar* gst_widevine_create_uuid_string (gconstpointer uuid_bytes);
-media::CdmAdapter *wvadapter_;
+wvadapter *wvadapter_;
 enum
 {
   PROP_0
